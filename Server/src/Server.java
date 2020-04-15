@@ -1,6 +1,4 @@
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -10,10 +8,16 @@ public class Server {
             System.out.println("Server started!");
 
             try (Socket socket = serverSocket.accept();
-                 BufferedWriter writer = new BufferedWriter(
-                         new OutputStreamWriter(socket.getOutputStream()));) {
-
-                writer.write("HELLO FROM SERVER");
+                 BufferedWriter writer =
+                         new BufferedWriter(
+                                 new OutputStreamWriter(socket.getOutputStream()));
+                 BufferedReader reader =
+                         new BufferedReader(
+                                 new InputStreamReader(
+                                         socket.getInputStream()));
+            ) {
+                String request = reader.readLine();
+                writer.write("HELLO FROM SERVER: " + request.length());
                 writer.newLine();
                 writer.flush();
             }
