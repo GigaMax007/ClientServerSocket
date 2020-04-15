@@ -1,22 +1,29 @@
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(8000);
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(8000);)
+        {
         System.out.println("Server started!");
+
 
         Socket socket = serverSocket.accept();
         System.out.println("Client connected");
 
+        BufferedWriter writer = new BufferedWriter(
+                new OutputStreamWriter(socket.getOutputStream()));
 
-        BufferedOutputStream writer =
-                new BufferedOutputStream(socket.getOutputStream());
-        writer.
+        writer.write("HELLO FROM SERVER");
+        writer.newLine();
+        writer.flush();
 
+        writer.close();
+        socket.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
